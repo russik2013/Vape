@@ -42,7 +42,7 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->save();
-        return redirect('tanks');
+        return redirect('admin/tanks');
     }
 
     /**
@@ -78,7 +78,7 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->update();
-        return redirect('tanks');
+        return redirect('admin/tanks');
     }
 
     /**
@@ -86,9 +86,9 @@ class TankController extends Controller
      *
      * @param  \App\Tank  $tank
      */
-    public function destroy(Tank $tank)
+    public function destroy($id)
     {
-        $tank->delete();
+        Tank::findOrFail($id)->delete();
 
         return redirect()->back();
 

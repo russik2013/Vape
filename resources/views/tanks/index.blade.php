@@ -8,14 +8,14 @@
                         <td class="table-text"><div>{{ $tank->name }}</div></td>
                         <!-- Tank Delete Button -->
                         <td>
-                            <a href="{{route('tanks.delete')}}">
+                            <a href="{{route('tanks.delete', ['id' => $tank->id])}}">
                                 <button >
                                     <i class="fa fa-btn fa-trash">Delete</i>
                                 </button>
                             </a>
                         </td>
                         <td>
-                            <a href="{{url('tanks/' . $tank->id . '/edit')}}">
+                            <a href="{{url('/admin/tanks/' . $tank->id . '/edit')}}">
                                 <button >
                                     <i class="fa fa-btn fa-trash">Update</i>
                                 </button>
@@ -28,7 +28,4 @@
         @endif
         </table>
     </div>
-@endsection
-@section("footer")
-    @include("tanks.footer")
 @endsection

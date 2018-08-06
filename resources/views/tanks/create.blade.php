@@ -7,13 +7,13 @@
     @endif
     <div class="container">
         @if(!isset($tank))
-        <form action="/tanks" method="POST">
+        <form action="{{url('/admin/tanks')}}" method="POST">
             {{ csrf_field() }}
             <input name="name"/>
             <button type="submit">Add</button>
         </form>
         @else
-        <form action="/tanks/{{$tank->id}}" method="POST">
+        <form action="{{url('/admin/tanks'.$tank->id)}}" method="POST">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
             <input name="name" value="{{$tank->name}}"/>
@@ -21,7 +21,4 @@
         </form>
         @endif
     </div>
-@endsection
-@section("footer")
-    @include("tanks.footer")
 @endsection
