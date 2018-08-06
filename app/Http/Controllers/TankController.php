@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tank;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 class TankController extends Controller
 {
@@ -37,6 +38,10 @@ class TankController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'name'=>'required|max:255',
+        ]);
+
         $tank = new Tank();
         $tank->name = $request->name;
         $tank->save();
@@ -75,6 +80,9 @@ class TankController extends Controller
      */
     public function update(Request $request, Tank $tank)
     {
+        $this->validate($request,[
+            'name'=>'required|max:255',
+        ]);
         $tank->name = $request->name;
         $tank->update();
 
