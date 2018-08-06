@@ -6,7 +6,6 @@
             @foreach($tanks as $tank)
                     <tr>
                         <td class="table-text"><div>{{ $tank->name }}</div></td>
-
                         <!-- Tank Delete Button -->
                         <td>
                             <form action="{{url('tanks/' . $tank->id)}}" method="POST">
@@ -17,6 +16,14 @@
                                 </button>
                             </form>
                         </td>
+                        <td>
+                            <form action="{{url('tanks/' . $tank->id . '/edit')}}" method="GET">
+                                {{ csrf_field() }}
+                                <button type="submit" id="delete-task-{{ $tank->id }}" class="btn btn-danger">
+                                    <i class="fa fa-btn fa-trash"></i>Update
+                                </button>
+                            </form>
+                        </td>
                     </tr>
             @endforeach
         @else
@@ -24,4 +31,7 @@
         @endif
         </table>
     </div>
+@endsection
+@section("footer")
+    @include("tanks.footer")
 @endsection

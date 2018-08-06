@@ -9,3 +9,6 @@
         </table>
     </div>
 @endsection
+@section("footer")
+    @include("tanks.footer")
+@endsection
