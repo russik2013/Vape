@@ -2,17 +2,16 @@
 @section("content")
     <div class="container">
         <table>
-        @if(count($tanks)!=0)
+        @if(isset($tanks) && count($tanks)!=0)
             @foreach($tanks as $tank)
                     <tr>
                         <td class="table-text"><div>{{ $tank->name }}</div></td>
 
                         <!-- Tank Delete Button -->
                         <td>
-                            <form action="{{url('task/' . $tank->id)}}" method="POST">
+                            <form action="{{url('tanks/' . $tank->id)}}" method="POST">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
-
                                 <button type="submit" id="delete-task-{{ $tank->id }}" class="btn btn-danger">
                                     <i class="fa fa-btn fa-trash"></i>Delete
                                 </button>

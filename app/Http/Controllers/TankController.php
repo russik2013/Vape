@@ -52,7 +52,7 @@ class TankController extends Controller
      */
     public function show(Tank $tank)
     {
-        //
+        return view("tanks.single",['tank' => $tank]);
     }
 
     /**
@@ -63,7 +63,7 @@ class TankController extends Controller
      */
     public function edit(Tank $tank)
     {
-        //
+        return view("tanks.create",['tank' => $tank]);
     }
 
     /**
@@ -75,7 +75,13 @@ class TankController extends Controller
      */
     public function update(Request $request, Tank $tank)
     {
-        //
+        $tank->name = $request->name;
+        $tank->update();
+
+        return view("tanks.create",
+            ['tank' => $tank,
+             'isUpdated' => true,
+            ]);
     }
 
     /**
@@ -86,6 +92,8 @@ class TankController extends Controller
      */
     public function destroy(Tank $tank)
     {
-        //
+        $tank->delete();
+
+        return view("tanks.index");
     }
 }
