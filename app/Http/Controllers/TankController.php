@@ -14,7 +14,9 @@ class TankController extends Controller
      */
     public function index()
     {
-        //
+        $tanks = Tank::all();
+
+        return view("tanks.index",['tanks'=> $tanks]);
     }
 
     /**
@@ -24,7 +26,7 @@ class TankController extends Controller
      */
     public function create()
     {
-        //
+        return view("tanks.create");
     }
 
     /**
@@ -35,7 +37,11 @@ class TankController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tank = new Tank();
+        $tank->name = $request->name;
+        $tank->save();
+
+        return view("tanks.create",['isAdded' => true]);
     }
 
     /**
