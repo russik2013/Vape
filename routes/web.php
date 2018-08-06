@@ -14,4 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource("tanks","TankController");
+Route::group(['prefix' => 'admin'], function (){
+
+    Route::resource("tanks","TankController");
+
+    Route::get('tanks/delete', 'TankController@destroy')->name('tanks.delete');
+
+
+
+});
+
+

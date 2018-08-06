@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TankRequest;
 use App\Tank;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
@@ -33,20 +34,15 @@ class TankController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\TankRequest  $request
      * @return \Illuminate\Http\Response
+     * @param  \App\Tank $tank
      */
-    public function store(Request $request)
+    public function store(TankRequest $request, Tank $tank)
     {
-        $this->validate($request,[
-            'name'=>'required|max:255',
-        ]);
-
-        $tank = new Tank();
-        $tank->name = $request->name;
+        $tank->fill($request->all());
         $tank->save();
-
-        return view("tanks.create",['isAdded' => true]);
+        return redirect('tanks');
     }
 
     /**
@@ -74,34 +70,27 @@ class TankController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\TankRequest  $request
      * @param  \App\Tank  $tank
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tank $tank)
+    public function update(TankRequest $request, Tank $tank)
     {
-        $this->validate($request,[
-            'name'=>'required|max:255',
-        ]);
-        $tank->name = $request->name;
+        $tank->fill($request->all());
         $tank->update();
-
-        return view("tanks.create",
-            ['tank' => $tank,
-             'isUpdated' => true,
-            ]);
+        return redirect('tanks');
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Tank  $tank
-     * @return \Illuminate\Http\Response
      */
     public function destroy(Tank $tank)
     {
         $tank->delete();
 
-        return view("tanks.index");
+        return redirect()->back();
+
     }
 }

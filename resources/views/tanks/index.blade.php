@@ -8,21 +8,18 @@
                         <td class="table-text"><div>{{ $tank->name }}</div></td>
                         <!-- Tank Delete Button -->
                         <td>
-                            <form action="{{url('tanks/' . $tank->id)}}" method="POST">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-                                <button type="submit" id="delete-task-{{ $tank->id }}" class="btn btn-danger">
-                                    <i class="fa fa-btn fa-trash"></i>Delete
+                            <a href="{{route('tanks.delete')}}">
+                                <button >
+                                    <i class="fa fa-btn fa-trash">Delete</i>
                                 </button>
-                            </form>
+                            </a>
                         </td>
                         <td>
-                            <form action="{{url('tanks/' . $tank->id . '/edit')}}" method="GET">
-                                {{ csrf_field() }}
-                                <button type="submit" id="delete-task-{{ $tank->id }}" class="btn btn-danger">
-                                    <i class="fa fa-btn fa-trash"></i>Update
+                            <a href="{{url('tanks/' . $tank->id . '/edit')}}">
+                                <button >
+                                    <i class="fa fa-btn fa-trash">Update</i>
                                 </button>
-                            </form>
+                            </a>
                         </td>
                     </tr>
             @endforeach
