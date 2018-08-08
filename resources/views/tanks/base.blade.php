@@ -11,9 +11,9 @@
 @yield("header")
 @yield("content")
 <footer>
-    <a href="{{url('/admin/tanks/create')}}">add new</a>
+    <a href="{{route('tanks.create')}}">add new</a>
     <br>
-    <a href="{{url('/admin/tanks')}}">all tanks</a>
+    <a href="{{route('tanks.index')}}">all tanks</a>
 </footer>
 </body>
 </html>

@@ -8,7 +8,7 @@ class Tank extends Model
 {
     protected $fillable = ['name'];
 
-    public function settings()
+    public function params()
     {
         return $this->morphMany(DeviseSettings::class, 'devices');
     }

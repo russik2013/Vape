@@ -48,12 +48,15 @@ class TankController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Tank  $tank
+//     * @param  integer  $id
+     * @param Tank $tank
      * @return \Illuminate\Http\Response
      */
+    //public function show($id) // ознакомься и пойми, зачем я добавил эти строки
     public function show(Tank $tank)
     {
-        return view("tanks.single",['tank' => $tank]);
+       //$tank = Tank::with('params', 'params.settings')->find($id); // debugger в помощь
+       return view("tanks.single",['tank' => $tank]);
     }
 
     /**

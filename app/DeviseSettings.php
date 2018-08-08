@@ -13,4 +13,15 @@ class DeviseSettings extends Model
         'settings_id',
         'value',
     ];
+
+    public function devices()
+    {
+        return $this->morphTo();
+    }
+
+    public function settings()
+    {
+        return $this->morphTo();
+    }
+
 }
