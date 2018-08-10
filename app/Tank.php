@@ -13,4 +13,8 @@ class Tank extends Model
         return $this->morphMany(DeviseSettings::class, 'devices');
     }
 
+    public function users(){
+      return $this->belongsToMany(User::class);
+    }
+
 }
