@@ -18,7 +18,10 @@ Route::group(['prefix' => 'admin'], function (){
 
     Route::resource("tanks","TankController");
 
+    Route::resource("users","UserController");
+
     Route::get('tanks/delete/{id}', 'TankController@destroy')->name('tanks.delete');
+    Route::get('users/delete/{id}', 'UserController@destroy')->name('users.delete');
 
     Route::group(['prefix' => 'settings'], function (){
 

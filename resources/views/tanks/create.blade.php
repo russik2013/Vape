@@ -13,7 +13,7 @@
             <button type="submit">Add</button>
         </form>
         @else
-        <form action="{{route('photo.update', ['id' => $tank->id])}}" method="POST">
+        <form action="{{route('tanks.update', ['id' => $tank->id])}}" method="POST">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
             <input name="name" value="{{$tank->name}}"/>
