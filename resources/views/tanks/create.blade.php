@@ -11,7 +11,10 @@
             {{ csrf_field() }}
             <input name="name"/>
             <button type="submit">Add</button>
+
         </form>
+        <br/>
+            <button>Add params</button>
         @else
         <form action="{{route('tanks.update', ['id' => $tank->id])}}" method="POST">
             {{ csrf_field() }}

@@ -32,6 +32,7 @@ Route::group(['prefix' => 'admin'], function (){
         Route::post('create', 'AdminController@store')->name('settings.store');
     });
 
+    Route::post('getAllSettings', 'AdminController@getAllSettings');
 
 });
 

@@ -27,8 +27,15 @@ class UserRequest extends FormRequest
             'name' => 'required|max:100',
             'surname' => 'required|max:100',
             'phone' => 'required|numeric',
-            'email' => 'required|max:30|email',
+            'email' => 'required|string|max:30|email',
             'password' => 'required|max:50',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.max' => 'ку-ку 30 символов максимум'
         ];
     }
 }

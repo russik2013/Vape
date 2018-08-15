@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     public function settings()
     {
-        return view('admin.settings.index', ['settings' => Settings::all()]);
+        return view('admin.settings.index', ['settings' => $this->getAllSettings()]);
     }
 
     public function settingsDelete($id = null)
@@ -37,5 +37,10 @@ class AdminController extends Controller
     public function settingsShow($id = null)
     {
         return view('admin.settings.show', ['setting' => Settings::findOrNew($id)]);
+    }
+
+    public function getAllSettings()
+    {
+        return Settings::all();
     }
 }

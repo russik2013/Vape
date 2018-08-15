@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TankRequest;
 use App\Tank;
+use App\User;
 use App\UsersTanks;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
@@ -17,6 +18,7 @@ class TankController extends Controller
      */
     public function index()
     {
+
         $tanks = Tank::all();
 
         return view("tanks.index",['tanks'=> $tanks]);
@@ -44,7 +46,7 @@ class TankController extends Controller
         $tank->fill($request->all());
         $tank->save();
 
-        return redirect(route('admin.tanks'));
+        return redirect(route('tanks.index'));
     }
 
     /**
