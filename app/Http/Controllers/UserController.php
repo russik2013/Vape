@@ -42,7 +42,7 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->save();
 
-        return redirect('admin/users');
+        return redirect(route('users.index'));
     }
 
     /**
@@ -79,7 +79,7 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->update();
 
-        return redirect('admin/users');
+        return redirect(route('users.index'));
     }
 
     /**
