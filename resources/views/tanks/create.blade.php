@@ -9,8 +9,14 @@
         @if(!isset($tank))
         <form action="{{route('tanks.store')}}" method="POST">
             {{ csrf_field() }}
-            <input name="name"/>
-            <button type="submit">Add</button>
+            <input name="name"/> <button type="submit">Add</button>
+            {{--<br/>--}}
+            {{--<select name="params[name]">--}}
+                {{--<option>name1</option>--}}
+                {{--<option>name2</option>--}}
+            {{--</select>--}}
+            {{--<input name="params[value]"/>--}}
+
 
         </form>
         <br/>
