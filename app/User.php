@@ -9,13 +9,14 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public $table = 'users';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'surname', 'phone',
     ];
 
     /**
@@ -27,7 +28,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function tanks(){
-        return $this->HasMany(Tank::class);
+    public function tanks() {
+        return $this->belongsToMany(Tank::class, 'users_to_tanks')->using(UsersTanks::class);
     }
 }

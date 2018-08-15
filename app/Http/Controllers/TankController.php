@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TankRequest;
 use App\Tank;
+use App\UsersTanks;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
@@ -42,21 +43,22 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->save();
-        return redirect('admin/tanks');
+
+        return redirect(route('admin.tanks'));
     }
 
     /**
      * Display the specified resource.
      *
-//     * @param  integer  $id
-     * @param Tank $tank
+     * @param  integer  $id
+    // * @param Tank $tank
      * @return \Illuminate\Http\Response
      */
-    //public function show($id) // ознакомься и пойми, зачем я добавил эти строки
-    public function show(Tank $tank)
+    public function show($id) // ознакомься и пойми, зачем я добавил эти строки
+    //public function show(Tank $tank)
     {
-       //$tank = Tank::with('params', 'params.settings')->find($id); // debugger в помощь
-       return view("tanks.single",['tank' => $tank]);
+        $tank = Tank::with('params', 'params.settings')->find($id); // debugger в помощь
+        return view("tanks.single",['tank' => $tank]);
     }
 
     /**
@@ -81,19 +83,19 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->update();
-        return redirect('admin/tanks');
+        return redirect(route('admin.tanks'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Tank  $tank
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         Tank::findOrFail($id)->delete();
 
         return redirect()->back();
-
     }
 }
