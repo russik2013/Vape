@@ -29,7 +29,8 @@ Route::group(['prefix' => 'admin'], function (){
         Route::post('create', 'AdminController@store')->name('settings.store');
     });
 
-
+    Route::resource('liquids','LiquidController');
+    Route::get('liquids/delete/{id}', 'LiquidController@destroy')->name('liquids.delete');
 });
 
 
