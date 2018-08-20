@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DeviseSettings;
 use App\Http\Requests\SettingRequest;
+use App\Mode;
 use App\Settings;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AdminController extends Controller
 {
@@ -17,8 +21,9 @@ class AdminController extends Controller
        Settings::findOrFail($id)->delete();
        return redirect()->back();
     }
-    public function store(SettingRequest $request, Settings $settings)
+    public function store(SettingRequest $request, $id = null)
     {
+        $settings = Settings::findOrNew($id);
         $settings->fill($request->all());
         if($request->activity){
             $settings->activity = 1;
@@ -42,5 +47,52 @@ class AdminController extends Controller
     public function getAllSettings()
     {
         return Settings::all();
+    }
+
+    public function settingViewComposer(View $view)
+    {
+
+    }
+
+    public function modes()
+    {
+        return view('modes.index', ['modes' => Mode::all()]);
+    }
+
+    public function modesCreate($id = null)
+    {
+        return view('modes.create', ['mode' => Mode::findOrNew($id)]);
+    }
+
+    public function modesStore( Request $request, $id = null)
+    {
+        $mode = Mode::findOrNew($id);
+        $mode->fill($request->all());
+        $mode->save();
+        $settingsMass = [];
+        if($request->Settings) {
+            foreach ($request->Settings as $setting) {
+                $settingsMass[] = [
+                    'devices_type' => Mode::class,
+                    'devices_id' => $mode->id,
+                    'settings_type' => Settings::class,
+                    'settings_id' => array_get($setting, 'settingID', 1),
+                    'value' => array_get($setting, 'settingValue', 'default')
+                ];
+            }
+        }
+        DeviseSettings::insert($settingsMass);
+        return redirect(route('modes.index'));
+    }
+
+    public function modeDelete($id)
+    {
+        (Mode::findOrNew($id))->delete();
+        return redirect(route('modes.index'));
+    }
+
+    public function modeShow($id)
+    {
+        return view('modes.single', ['mode' => Mode::find($id)]);
     }
 }

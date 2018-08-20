@@ -160,8 +160,14 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        //Customs package provider
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+
+        //Customs users provider
+        App\Providers\ComposerServiceProvider::class,
+
+
 
     ],
 
