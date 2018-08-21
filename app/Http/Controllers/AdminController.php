@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\DeviseSettings;
 use App\Http\Requests\SettingRequest;
+use App\Http\Requests\AdditionalParamsRequest;
 use App\Mode;
-use App\Settings;
+use App\Setting;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -18,12 +19,12 @@ class AdminController extends Controller
 
     public function settingsDelete($id = null)
     {
-       Settings::findOrFail($id)->delete();
+       Setting::findOrFail($id)->delete();
        return redirect()->back();
     }
     public function store(SettingRequest $request, $id = null)
     {
-        $settings = Settings::findOrNew($id);
+        $settings = Setting::findOrNew($id);
         $settings->fill($request->all());
         if($request->activity){
             $settings->activity = 1;
@@ -36,17 +37,17 @@ class AdminController extends Controller
 
     public function settingsCreate($id = null)
     {
-        return view('admin.settings.create', ['setting' => Settings::findOrNew($id)]);
+        return view('admin.settings.create', ['setting' => Setting::findOrNew($id)]);
     }
 
     public function settingsShow($id = null)
     {
-        return view('admin.settings.show', ['setting' => Settings::findOrNew($id)]);
+        return view('admin.settings.show', ['setting' => Setting::findOrNew($id)]);
     }
 
     public function getAllSettings()
     {
-        return Settings::all();
+        return Setting::all();
     }
 
     public function settingViewComposer(View $view)
@@ -75,7 +76,7 @@ class AdminController extends Controller
                 $settingsMass[] = [
                     'devices_type' => Mode::class,
                     'devices_id' => $mode->id,
-                    'settings_type' => Settings::class,
+                    'settings_type' => Setting::class,
                     'settings_id' => array_get($setting, 'settingID', 1),
                     'value' => array_get($setting, 'settingValue', 'default')
                 ];
@@ -95,4 +96,16 @@ class AdminController extends Controller
     {
         return view('modes.single', ['mode' => Mode::find($id)]);
     }
+
+    /**
+     * Get additional view for adding settings to tanks
+     *
+     * @param \App\Http\Requests\AdditionalParamsRequest $request
+     * @return \Illuminate\Http\Response
+     * */
+    public function getAdditionalView(AdditionalParamsRequest $request)
+    {
+        return view('forAdditionalParams', ['settingIndex' => $request->input('settingIndex')]);
+    }
+
 }

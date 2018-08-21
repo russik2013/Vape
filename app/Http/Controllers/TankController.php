@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TankRequest;
 use App\Tank;
-use App\User;
-use App\UsersTanks;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Concerns\ValidatesAttributes;
+use App\Setting;
+use App\DeviseSettings;
 
 class TankController extends Controller
 {
@@ -46,6 +44,17 @@ class TankController extends Controller
         $tank->fill($request->all());
         $tank->save();
 
+        $ds_values = array();
+        foreach ($request->input('params') as $setting_data) {
+            $setting = Setting::where('name', $setting_data['name'])->first();
+            $ds_values[] = array('devices_type' => 'App\Tank',
+                'devices_id' => $tank->id,
+                'settings_type' => 'App\Setting',
+                'settings_id' => $setting->id,
+                'value' => $setting_data['value'] );
+        }
+
+        DeviseSettings::insert($ds_values);
         return redirect(route('tanks.index'));
     }
 
@@ -71,7 +80,15 @@ class TankController extends Controller
      */
     public function edit(Tank $tank)
     {
-        return view("tanks.create",['tank' => $tank]);
+        $settings_names = array();
+        $settings_values = array();
+
+        foreach ($tank->params as $singleParam) {
+            $settings_names[] = $singleParam->settings->name;
+            $settings_values[] = $singleParam->value;
+        }
+
+        return view("tanks.create",['tank' => $tank, 'settings_values' => $settings_values, 'settings_names' => $settings_names]);
     }
 
     /**
@@ -85,7 +102,23 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->update();
-        return redirect(route('admin.tanks'));
+
+        //delete old params
+        $tank->params()->delete();
+        //add new params
+        $ds_values = array();
+        foreach ($request->input('params') as $setting_data) {
+            $setting = Setting::where('name', $setting_data['name'])->first();
+            $ds_values[] = array('devices_type' => 'App\Tank',
+                'devices_id' => $tank->id,
+                'settings_type' => 'App\Setting',
+                'settings_id' => $setting->id,
+                'value' => $setting_data['value'] );
+        }
+        //add new params to database
+        DeviseSettings::insert($ds_values);
+
+        return redirect(route('tanks.index'));
     }
 
     /**

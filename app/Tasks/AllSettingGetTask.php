@@ -8,12 +8,12 @@
 
 namespace App\Tasks;
 
-use App\Settings;
+use App\Setting;
 
 class AllSettingGetTask extends Task {
 
     public function run()
     {
-        return Settings::all();
+        return Setting::all();
     }
 }
