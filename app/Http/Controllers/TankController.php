@@ -43,18 +43,18 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->save();
-
-        $ds_values = array();
-        foreach ($request->input('params') as $setting_data) {
-            $setting = Setting::where('name', $setting_data['name'])->first();
-            $ds_values[] = array('devices_type' => 'App\Tank',
-                'devices_id' => $tank->id,
-                'settings_type' => 'App\Setting',
-                'settings_id' => $setting->id,
-                'value' => $setting_data['value'] );
+        if($request->exists('params')) {
+            $ds_values = array();
+            foreach ($request->input('params') as $setting_data) {
+                $setting = Setting::where('name', $setting_data['name'])->first();
+                $ds_values[] = array('devices_type' => 'App\Tank',
+                    'devices_id' => $tank->id,
+                    'settings_type' => 'App\Setting',
+                    'settings_id' => $setting->id,
+                    'value' => $setting_data['value']);
+            }
+            DeviseSettings::insert($ds_values);
         }
-
-        DeviseSettings::insert($ds_values);
         return redirect(route('tanks.index'));
     }
 
@@ -75,11 +75,13 @@ class TankController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Tank  $tank
+     * @param  int  $tank_id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tank $tank)
+    public function edit($tank_id)
     {
+        $tank = Tank::with('params')->find($tank_id);
+
         $settings_names = array();
         $settings_values = array();
 
@@ -102,21 +104,22 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->update();
-
-        //delete old params
-        $tank->params()->delete();
-        //add new params
-        $ds_values = array();
-        foreach ($request->input('params') as $setting_data) {
-            $setting = Setting::where('name', $setting_data['name'])->first();
-            $ds_values[] = array('devices_type' => 'App\Tank',
-                'devices_id' => $tank->id,
-                'settings_type' => 'App\Setting',
-                'settings_id' => $setting->id,
-                'value' => $setting_data['value'] );
+        if($request->exists('params')) {
+            //delete old params
+            $tank->params()->delete();
+            //add new params
+            $ds_values = array();
+            foreach ($request->input('params') as $setting_data) {
+                $setting = Setting::where('name', $setting_data['name'])->first();
+                $ds_values[] = array('devices_type' => 'App\Tank',
+                    'devices_id' => $tank->id,
+                    'settings_type' => 'App\Setting',
+                    'settings_id' => $setting->id,
+                    'value' => $setting_data['value']);
+            }
+            //insert new params to database
+            DeviseSettings::insert($ds_values);
         }
-        //add new params to database
-        DeviseSettings::insert($ds_values);
 
         return redirect(route('tanks.index'));
     }

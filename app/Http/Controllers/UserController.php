@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\User;
+use App\Tank;
 use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
@@ -42,6 +42,13 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->save();
 
+        if($request->exists('tanks')) {
+            $ids = collect( Tank::whereIn( 'name', $request->input( 'tanks' ) )->get() )->map( function ($value){
+                return $value->id;
+            });
+            $user->tanks()->attach($ids);
+        }
+
         return redirect(route('users.index'));
     }
 
@@ -59,12 +66,15 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User  $user
+     * @param  int  $user_id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User  $user)
+    public function edit($user_id)
     {
-        return view('users.create', ['user' => $user]);
+        $user = User::with('tanks')->find($user_id);
+        $tanks_names = $user->tanks->map(function($value){ return $value->name; });
+
+        return view('users.create', ['user' => $user, 'tanks_names' => $tanks_names]);
     }
 
     /**
@@ -79,6 +89,15 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->update();
 
+        if($request->exists('tanks')) {
+            //delete old tanks
+            $user->tanks()->detach();
+            //add new tanks to user
+            $ids = collect(Tank::whereIn('name', $request->input('tanks'))->get())->map(function ($value) {
+                return $value->id;
+            });
+            $user->tanks()->attach($ids);
+        }
         return redirect(route('users.index'));
     }
 
