@@ -17,6 +17,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function (){
 
     Route::resource("tanks","TankController");
+    Route::get('/settingForTank', 'AdminController@getAdditionalView')->name("additionalSettings");
 
     Route::resource("liquids","LiquidController");
 

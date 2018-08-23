@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 use App\DeviseSettings;
-use App\Settings;
+use App\Setting;
 use App\Tank;
 
 /**
