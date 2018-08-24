@@ -25,9 +25,11 @@
                         <p> {{$errors -> first('password')}} </p>
                     @endif
                     <tr><td>password - <input type="password" name="password"/><br></td></tr>
-                    <tr><td><button type="submit">Add</button></td></tr>
+                    <tr><td><button type="submit" id="submitButton">Add</button></td></tr>
                 </table>
             </form>
+            <br/>
+            <button onclick="onAddSetting( '{{route('additionalSettingsForUsers')}}', 'submitButton' )">Add tanks</button>
         @else
             <form action="{{route('users.update', ['id' => $user->id])}}" method="POST">
                 <table>
@@ -38,9 +40,20 @@
                     <tr><td>email - <input type="email" name="email" value="{{$user->email}}"/><br></td></tr>
                     <tr><td>phone - <input name="phone" value="{{$user->phone}}"/><br></td></tr>
                     <tr><td>password - <input type="password" name="password" value="{{$user->password}}"/><br></td></tr>
-                    <tr><td><button type="submit">Update</button></td></tr>
+                    <tr><td><button type="submit" id="submitUpdateButton">Update</button></td></tr>
                 </table>
             </form>
+            <br/>
+            <button onclick="onAddSetting( '{{route('additionalSettingsForUsers')}}', 'submitUpdateButton' )">Add tanks</button>
+            <br/>
+            <script>
+                var tanksNames = <?php echo json_encode( $tanks_names );?>;
+                $(document).ready(function() {
+                    loadTanksWhenUpdate( '{{$user->tanks->count()}}', '{{route('additionalSettingsForUsers')}}', 'submitUpdateButton'
+                        , tanksNames);
+                });
+            </script>
         @endif
     </div>
+    <script type="text/javascript" src="{{asset('js/onAddSettingToTank.js')}}"></script>
 @endsection

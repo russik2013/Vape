@@ -103,9 +103,19 @@ class AdminController extends Controller
      * @param \App\Http\Requests\AdditionalParamsRequest $request
      * @return \Illuminate\Http\Response
      * */
-    public function getAdditionalView(AdditionalParamsRequest $request)
+    public function getAdditionalViewForTanks(AdditionalParamsRequest $request)
     {
-        return view('forAdditionalParams', ['settingIndex' => $request->input('settingIndex')]);
+        return view('tanks.forAdditionalParams', ['index' => $request->input('index')]);
+    }
+    /**
+     * Get additional view for adding tanks to users
+     *
+     * @param \App\Http\Requests\AdditionalParamsRequest $request
+     * @return \Illuminate\Http\Response
+     * */
+    public function getAdditionalViewForUsers( AdditionalParamsRequest $request)
+    {
+        return view('users.forAdditionalParams', ['index' => $request->input('index')]);
     }
 
 }
