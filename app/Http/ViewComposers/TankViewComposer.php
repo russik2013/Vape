@@ -22,8 +22,6 @@ class TankViewComposer
      */
     public function compose(View $view)
     {
-        $settings = Setting::all();
 
-        $view->with('elems', $settings);
     }
 }

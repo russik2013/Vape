@@ -43,14 +43,15 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->save();
-        if($request->exists('params')) {
+
+        if($request->params) {
             $ds_values = array();
-            foreach ($request->input('params') as $setting_data) {
-                $setting = Setting::where('name', $setting_data['name'])->first();
+
+            foreach ($request->params as $setting_data){
                 $ds_values[] = array('devices_type' => 'App\Tank',
                     'devices_id' => $tank->id,
                     'settings_type' => 'App\Setting',
-                    'settings_id' => $setting->id,
+                    'settings_id' => $setting_data['id'],
                     'value' => $setting_data['value']);
             }
             DeviseSettings::insert($ds_values);
@@ -132,8 +133,9 @@ class TankController extends Controller
      */
     public function destroy($id)
     {
-        Tank::findOrFail($id)->delete();
-
+        $tank =  Tank::findOrFail($id);
+        $tank->params()->delete();
+        $tank->delete();
         return redirect()->back();
     }
 }
