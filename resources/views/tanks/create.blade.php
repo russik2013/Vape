@@ -8,17 +8,16 @@
                 <button type="submit" id="submitButton">Add</button>
             </form>
             <br/>
-        @include("tanks.forAdditionalParams")
         @else
-
-            <form id="updateForm" onclick="" action="{{route('tanks.update', ['id' => $tank->id])}}" method="POST">
+            <form action="{{route('tanks.update', ['id' => $tank->id])}}" method="POST">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
                 <input name="name" value="{{$tank->name}}"/>
                 <button type="submit" id="submitUpdateButton">Update</button>
+                @include('tanks.forUpdate')
             </form>
             <br/>
         @endif
+            @include("tanks.forAdditionalParams")
     </div>
-    <script type="text/javascript" src="{{asset('js/onAddSettingToTank.js')}}"></script>
 @endsection

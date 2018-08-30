@@ -15,7 +15,6 @@ class ViewComposerProvider extends ServiceProvider
     public function boot()
     {
         View::composer('users.forAdditionalParams', 'App\Http\ViewComposers\UserViewComposer');
-        View::composer('tanks.forAdditionalParams', 'App\Http\ViewComposers\TankViewComposer');
     }
 
     /**

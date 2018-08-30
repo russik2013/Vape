@@ -9,7 +9,7 @@ use App\Mode;
 use App\Setting;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-
+use App\Tank;
 class AdminController extends Controller
 {
     public function settings()
@@ -49,12 +49,16 @@ class AdminController extends Controller
     {
         return Setting::all();
     }
-
-    public function settingViewComposer(View $view)
+    public function getSettingsAndTankParams(Request $request)
     {
+        $tank = Tank::with('params')->find($request->tank_id);
 
+        $params = $tank->params->toJson();
+        $settings = $this->getAllSettings()->toJson();
+
+        $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
+        return $settings_and_params;
     }
-
     public function modes()
     {
         return view('modes.index', ['modes' => Mode::all()]);

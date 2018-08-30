@@ -7,14 +7,15 @@
             url: "{{route('settings.all.get')}}",
             type: "POST",
             data: {'_token' : "{{csrf_token()}}"},
-            success: function(result){
-                selector = "<br/><br/><select name = 'params["+j+"][id]'>";
-                for(i = 0; i < result.length; i++){
-                    selector += "<option value = '"+result[i].id+"'>"+result[i].name+"</option>"
+            success: function(result) {
+                var selector = "<br/><br/><select name = 'params["+j+"][id]'>";
+                for(var i = 0; i < result.length; i++) {
+                    selector += "<option value = '"+result[i].id+"'>"+result[i].name+"</option>";
                 }
-                selector += "</select> <input name = 'params["+j+"][value]'>";
+                selector += "</select><input name = 'params["+j+"][value]'>";
                 $('form').append(selector);
+                j++;
             }});
-    j++;
+
     });
 </script>
