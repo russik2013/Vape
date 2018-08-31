@@ -12,6 +12,9 @@ use Illuminate\View\View;
 use App\Tank;
 class AdminController extends Controller
 {
+    const DEVICE_TYPE = 'App\Tank';
+    const SETTING_TYPE = 'App\Setting';
+
     public function settings()
     {
         return view('admin.settings.index', ['settings' => $this->getAllSettings()]);
@@ -120,6 +123,28 @@ class AdminController extends Controller
     public function getAdditionalViewForUsers( AdditionalParamsRequest $request)
     {
         return view('users.forAdditionalParams', ['index' => $request->input('index')]);
+    }
+    /**
+     * Detach single param from tank.
+     *
+     * @param  Request $request
+     * @return bool
+     */
+    public function detachSingleParam(Request $request)
+    {
+        DeviseSettings::where([
+            ["devices_type", "=", self::DEVICE_TYPE],
+            ["devices_id", "=", $request->input('tank_id')],
+            ["settings_type", "=", self::SETTING_TYPE],
+            ["settings_id", "=", $request->input('param')['id']],
+            ["value", "=", $request->input('param')['value']],
+        ])->delete();
+
+        $params = Tank::find($request->input('tank_id'))->params->toJson();
+        $settings = Setting::all()->toJson();
+
+        $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
+        return $settings_and_params;
     }
 
 }

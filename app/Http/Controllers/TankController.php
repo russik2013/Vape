@@ -6,9 +6,13 @@ use App\Http\Requests\TankRequest;
 use App\Tank;
 use App\Setting;
 use App\DeviseSettings;
+use Illuminate\Http\Request;
+use Psy\Util\Json;
 
 class TankController extends Controller
 {
+    const DEVICE_TYPE = 'App\Tank';
+    const SETTING_TYPE = 'App\Setting';
     /**
      * Display a listing of the resource.
      *
@@ -16,9 +20,7 @@ class TankController extends Controller
      */
     public function index()
     {
-
         $tanks = Tank::all();
-
         return view("tanks.index",['tanks'=> $tanks]);
     }
 
@@ -46,11 +48,10 @@ class TankController extends Controller
 
         if($request->params) {
             $ds_values = array();
-
             foreach ($request->params as $setting_data) {
-                $ds_values[] = array('devices_type' => 'App\Tank',
+                $ds_values[] = array('devices_type' => self::DEVICE_TYPE,
                     'devices_id' => $tank->id,
-                    'settings_type' => 'App\Setting',
+                    'settings_type' => self::SETTING_TYPE,
                     'settings_id' => $setting_data['id'],
                     'value' => $setting_data['value']);
             }
@@ -66,10 +67,9 @@ class TankController extends Controller
     // * @param Tank $tank
      * @return \Illuminate\Http\Response
      */
-    public function show($id) // ознакомься и пойми, зачем я добавил эти строки
-    //public function show(Tank $tank)
+    public function show($id)
     {
-        $tank = Tank::with('params', 'params.settings')->find($id); // debugger в помощь
+        $tank = Tank::with('params', 'params.settings')->find($id);
         return view("tanks.single",['tank' => $tank]);
     }
 
@@ -104,14 +104,14 @@ class TankController extends Controller
                 //if users parameters are more than tank parameters - add new one
                 if($i >= count($tank_params)) {
                     $additionalParam = new DeviseSettings();
-                    $additionalParam->devices_type = 'App\Tank';
+                    $additionalParam->devices_type = self::DEVICE_TYPE;
                     $additionalParam->devices_id = $tank->id;
-                    $additionalParam->settings_type = 'App\Setting';
+                    $additionalParam->settings_type = self::SETTING_TYPE;
                     $additionalParam->settings_id = $user_params[$i]['id'];
                     $additionalParam->value = $user_params[$i]['value'];
                     //add new parameter to tank parameters collection
                     $tank_params->push( $additionalParam );
-                    break;
+                    continue;
                 }
                 //set new values for current parameter
                 $tank_params[$i]->value = $user_params[$i]['value'];
@@ -126,7 +126,7 @@ class TankController extends Controller
                 //get odd elements of tank parameters
                 $deleting_items = $tank_params->slice( count($user_params) - 1 );
                 //delete odd elements
-                $deleting_items->each(function($item, $key){
+                $deleting_items->each( function($item, $key) {
                     $item->delete();
                 });
             }
