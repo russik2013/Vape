@@ -21,5 +21,7 @@
         @endif
             @include("tanks.forAdditionalParams")
     </div>
-    <input id="checkButton" name="checkButton" type="button" value="check" />
+    @if ($errors->has('params'))
+        <p> {{$errors -> first('params')}} </p>
+    @endif
 @endsection

@@ -167,8 +167,7 @@ return [
 
         //Customs users provider
         App\Providers\ComposerServiceProvider::class,
-
-
+        App\Providers\ValidateProvider::class,
 
     ],
 
