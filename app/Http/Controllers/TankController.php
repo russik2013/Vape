@@ -97,40 +97,28 @@ class TankController extends Controller
         $tank->update();
 
         $user_params = $request->params;
-        if($user_params) {
-            //get collection of tank parameters in database
-            $tank_params = $tank->params;
-            for($i = 0; $i < count($user_params); $i++) {
-                //if users parameters are more than tank parameters - add new one
-                if($i >= count($tank_params)) {
-                    $additionalParam = new DeviseSettings();
-                    $additionalParam->devices_type = self::DEVICE_TYPE;
-                    $additionalParam->devices_id = $tank->id;
-                    $additionalParam->settings_type = self::SETTING_TYPE;
-                    $additionalParam->settings_id = $user_params[$i]['id'];
-                    $additionalParam->value = $user_params[$i]['value'];
-                    //add new parameter to tank parameters collection
-                    $tank_params->push( $additionalParam );
-                    continue;
-                }
-                //set new values for current parameter
-                $tank_params[$i]->value = $user_params[$i]['value'];
-                $tank_params[$i]->settings_id = $user_params[$i]['id'];
-            }
-                //insert or update each model in tank collection of parameters
-                $tank_params->each(function($item, $key) {
-                    $item->save();
-                });
-            //if users parameters are less than tank parameters - remove odd params from tank
-            if( count($user_params) < count($tank_params) ) {
-                //get odd elements of tank parameters
-                $deleting_items = $tank_params->slice( count($user_params) - 1 );
-                //delete odd elements
-                $deleting_items->each( function($item, $key) {
-                    $item->delete();
-                });
-            }
+        $tank_params = $tank->params;
+
+        //1.update old params
+        for($i = 0; $i < count($tank_params); $i++) {
+            //set new values for current parameter
+            $tank_params[$i]->value = $user_params[$i]['value'];
+            $tank_params[$i]->settings_id = $user_params[$i]['id'];
+            $tank_params[$i]->save();
         }
+
+        //2.add new params
+        $newParams = [];
+        for($i = count($tank_params); $i < count($user_params); $i++) {
+            $newParams[] = [
+                'devices_type' => Tank::class,
+                'devices_id' => $tank->id,
+                'settings_type' => Setting::class,
+                'settings_id' => array_get($user_params[$i], 'id', 1),
+                'value' => array_get($user_params[$i], 'value', 'default'),
+            ];
+        }
+        DeviseSettings::insert($newParams);
 
         return redirect(route('tanks.index'));
     }
