@@ -18,6 +18,8 @@ Route::group(['prefix' => 'admin'], function (){
 
     Route::resource("tanks","TankController");
     Route::get('/settingForTank', 'AdminController@getAdditionalViewForTanks')->name("additionalSettingsForTanks");
+    Route::post('/settingsAndTanksParams', 'AdminController@getSettingsAndTankParams')->name('getSettingsAndTankParams');
+    Route::delete('/detachSingleParam', 'AdminController@detachSingleParam')->name('detachParamFromTank');
 
     Route::resource("liquids","LiquidController");
 
@@ -28,7 +30,7 @@ Route::group(['prefix' => 'admin'], function (){
     Route::get('liquids/delete/{id}', 'LiquidController@destroy')->name('liquids.delete');
     Route::get('users/delete/{id}', 'UserController@destroy')->name('users.delete');
 
-    Route::group(['prefix' => 'modes'], function (){
+    Route::group(['prefix' => 'modes'], function () {
 
         Route::get('/', 'AdminController@modes')->name('modes.index');
         Route::get('modes/{id?}', 'AdminController@modesCreate')->name('modes.create');

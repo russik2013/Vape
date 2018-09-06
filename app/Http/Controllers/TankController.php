@@ -6,9 +6,13 @@ use App\Http\Requests\TankRequest;
 use App\Tank;
 use App\Setting;
 use App\DeviseSettings;
+use Illuminate\Http\Request;
+use Psy\Util\Json;
 
 class TankController extends Controller
 {
+    const DEVICE_TYPE = 'App\Tank';
+    const SETTING_TYPE = 'App\Setting';
     /**
      * Display a listing of the resource.
      *
@@ -16,9 +20,7 @@ class TankController extends Controller
      */
     public function index()
     {
-
         $tanks = Tank::all();
-
         return view("tanks.index",['tanks'=> $tanks]);
     }
 
@@ -46,11 +48,10 @@ class TankController extends Controller
 
         if($request->params) {
             $ds_values = array();
-
-            foreach ($request->params as $setting_data){
-                $ds_values[] = array('devices_type' => 'App\Tank',
+            foreach ($request->params as $setting_data) {
+                $ds_values[] = array('devices_type' => self::DEVICE_TYPE,
                     'devices_id' => $tank->id,
-                    'settings_type' => 'App\Setting',
+                    'settings_type' => self::SETTING_TYPE,
                     'settings_id' => $setting_data['id'],
                     'value' => $setting_data['value']);
             }
@@ -66,32 +67,21 @@ class TankController extends Controller
     // * @param Tank $tank
      * @return \Illuminate\Http\Response
      */
-    public function show($id) // ознакомься и пойми, зачем я добавил эти строки
-    //public function show(Tank $tank)
+    public function show($id)
     {
-        $tank = Tank::with('params', 'params.settings')->find($id); // debugger в помощь
+        $tank = Tank::with('params', 'params.settings')->find($id);
         return view("tanks.single",['tank' => $tank]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $tank_id
+     * @param  Tank  $tank
      * @return \Illuminate\Http\Response
      */
-    public function edit($tank_id)
+    public function edit(Tank $tank)
     {
-        $tank = Tank::with('params')->find($tank_id);
-
-        $settings_names = array();
-        $settings_values = array();
-
-        foreach ($tank->params as $singleParam) {
-            $settings_names[] = $singleParam->settings->name;
-            $settings_values[] = $singleParam->value;
-        }
-
-        return view("tanks.create",['tank' => $tank, 'settings_values' => $settings_values, 'settings_names' => $settings_names]);
+        return view("tanks.create",['tank'=>$tank]);
     }
 
     /**
@@ -105,22 +95,30 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->update();
-        if($request->exists('params')) {
-            //delete old params
-            $tank->params()->delete();
-            //add new params
-            $ds_values = array();
-            foreach ($request->input('params') as $setting_data) {
-                $setting = Setting::where('name', $setting_data['name'])->first();
-                $ds_values[] = array('devices_type' => 'App\Tank',
-                    'devices_id' => $tank->id,
-                    'settings_type' => 'App\Setting',
-                    'settings_id' => $setting->id,
-                    'value' => $setting_data['value']);
-            }
-            //insert new params to database
-            DeviseSettings::insert($ds_values);
+
+        $user_params = $request->params;
+        $tank_params = $tank->params;
+
+        //1.update old params
+        for($i = 0; $i < count($tank_params); $i++) {
+            //set new values for current parameter
+            $tank_params[$i]->value = $user_params[$i]['value'];
+            $tank_params[$i]->settings_id = $user_params[$i]['id'];
+            $tank_params[$i]->save();
         }
+
+        //2.add new params
+        $newParams = [];
+        for($i = count($tank_params); $i < count($user_params); $i++) {
+            $newParams[] = [
+                'devices_type' => Tank::class,
+                'devices_id' => $tank->id,
+                'settings_type' => Setting::class,
+                'settings_id' => array_get($user_params[$i], 'id', 1),
+                'value' => array_get($user_params[$i], 'value', 'default'),
+            ];
+        }
+        DeviseSettings::insert($newParams);
 
         return redirect(route('tanks.index'));
     }
