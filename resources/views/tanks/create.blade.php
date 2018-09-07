@@ -1,7 +1,6 @@
 @extends("tanks.base")
 @section("content")
     <div class="container" >
-        @include("tanks.loadSettings")
         @if(!isset($tank))
             <form action="{{route('tanks.store')}}" method="POST">
                 {{ csrf_field() }}
@@ -10,6 +9,7 @@
             </form>
             <br/>
         @else
+            @include("tanks.loadSettings")
             <form action="{{route('tanks.update', ['id' => $tank->id])}}" method="POST">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}

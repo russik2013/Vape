@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DeviseSettings;
+use App\DeviceSetting;
 use App\Http\Requests\SettingRequest;
 use App\Http\Requests\AdditionalParamsRequest;
 use App\Mode;
@@ -12,9 +12,6 @@ use Illuminate\View\View;
 use App\Tank;
 class AdminController extends Controller
 {
-    const DEVICE_TYPE = 'App\Tank';
-    const SETTING_TYPE = 'App\Setting';
-
     public function settings()
     {
         return view('admin.settings.index', ['settings' => $this->getAllSettings()]);
@@ -54,12 +51,15 @@ class AdminController extends Controller
     }
     public function getSettingsAndTankParams(Request $request)
     {
-        $tank = Tank::with('params')->find($request->tank_id);
+        $params = DeviceSetting::where([
+            ['device_type', Tank::class],
+            ['device_id', $request->tank_id],
+        ])->get()->toJson();
 
-        $params = $tank->params->toJson();
         $settings = $this->getAllSettings()->toJson();
 
         $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
+
         return $settings_and_params;
     }
     public function modes()
@@ -89,7 +89,7 @@ class AdminController extends Controller
                 ];
             }
         }
-        DeviseSettings::insert($settingsMass);
+        DeviceSetting::insert($settingsMass);
         return redirect(route('modes.index'));
     }
 
@@ -132,15 +132,18 @@ class AdminController extends Controller
      */
     public function detachSingleParam(Request $request)
     {
-        DeviseSettings::where([
-            ["devices_type", "=", self::DEVICE_TYPE],
-            ["devices_id", "=", $request->input('tank_id')],
-            ["settings_type", "=", self::SETTING_TYPE],
-            ["settings_id", "=", $request->input('param')['id']],
+        DeviceSetting::where([
+            ["device_type", "=", Tank::class],
+            ["device_id", "=", $request->input('tank_id')],
+            ["setting_id", "=", $request->input('param')['id']],
             ["value", "=", $request->input('param')['value']],
         ])->delete();
 
-        $params = Tank::find($request->input('tank_id'))->params->toJson();
+        $params = DeviceSetting::where([
+            ['device_type', Tank::class],
+            ['device_id', $request->input('tank_id')],
+        ])->get()->toJson();
+
         $settings = Setting::all()->toJson();
 
         $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";

@@ -16,7 +16,7 @@ class RemoveValueCollumnFromSettings extends Migration
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn('value');
         });
-        Schema::table('devise_settings', function (Blueprint $table) {
+        Schema::table('device_setting', function (Blueprint $table) {
             $table->string('value');
         });
     }
@@ -31,7 +31,7 @@ class RemoveValueCollumnFromSettings extends Migration
         Schema::table('settings', function (Blueprint $table) {
             $table->string('value');
         });
-        Schema::table('devise_settings', function (Blueprint $table) {
+        Schema::table('device_setting', function (Blueprint $table) {
             $table->dropColumn('value');
         });
     }

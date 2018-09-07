@@ -4,13 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeviseSettings extends Model
+class DeviceSetting extends Model
 {
+    protected $table = 'device_setting';
+
     protected $fillable = [
-        'devices_type',
-        'devices_id',
-        'settings_type',
-        'settings_id',
+        'device_type',
+        'device_id',
+        'setting_id',
         'value',
     ];
 

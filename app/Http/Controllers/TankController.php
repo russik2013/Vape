@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TankRequest;
 use App\Tank;
 use App\Setting;
-use App\DeviseSettings;
+use App\DeviceSetting;
 use Illuminate\Http\Request;
 use Psy\Util\Json;
 
 class TankController extends Controller
 {
-    const DEVICE_TYPE = 'App\Tank';
-    const SETTING_TYPE = 'App\Setting';
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +19,7 @@ class TankController extends Controller
     public function index()
     {
         $tanks = Tank::all();
-        return view("tanks.index",['tanks'=> $tanks]);
+        return view("tanks.index", [ 'tanks'=> $tanks ] );
     }
 
     /**
@@ -46,17 +44,11 @@ class TankController extends Controller
         $tank->fill($request->all());
         $tank->save();
 
-        if($request->params) {
-            $ds_values = array();
-            foreach ($request->params as $setting_data) {
-                $ds_values[] = array('devices_type' => self::DEVICE_TYPE,
-                    'devices_id' => $tank->id,
-                    'settings_type' => self::SETTING_TYPE,
-                    'settings_id' => $setting_data['id'],
-                    'value' => $setting_data['value']);
-            }
-            DeviseSettings::insert($ds_values);
+        foreach ($request->params as $setting_data) {
+           $tank->settings()
+                ->attach( $setting_data['id'], ['value' => $setting_data['value']] );
         }
+
         return redirect(route('tanks.index'));
     }
 
@@ -69,8 +61,14 @@ class TankController extends Controller
      */
     public function show($id)
     {
-        $tank = Tank::with('params', 'params.settings')->find($id);
-        return view("tanks.single",['tank' => $tank]);
+        $tank = Tank::with('settings')->find($id);
+
+        $params = DeviceSetting::where([
+            ['device_type', Tank::class],
+            ['device_id', $tank->id],
+        ])->get();
+
+        return view("tanks.single",['tank' => $tank, 'params' => $params]);
     }
 
     /**
@@ -81,7 +79,7 @@ class TankController extends Controller
      */
     public function edit(Tank $tank)
     {
-        return view("tanks.create",['tank'=>$tank]);
+        return view("tanks.create",['tank' => $tank]);
     }
 
     /**
@@ -96,29 +94,14 @@ class TankController extends Controller
         $tank->fill($request->all());
         $tank->update();
 
-        $user_params = $request->params;
-        $tank_params = $tank->params;
+        $params_to_synchronize = array();
 
-        //1.update old params
-        for($i = 0; $i < count($tank_params); $i++) {
-            //set new values for current parameter
-            $tank_params[$i]->value = $user_params[$i]['value'];
-            $tank_params[$i]->settings_id = $user_params[$i]['id'];
-            $tank_params[$i]->save();
+        if($request->params) {
+            foreach ($request->params as $single_param) {
+                    $params_to_synchronize[$single_param['id']] = ['value' => $single_param['value']];
+            }
+            $tank->settings()->sync($params_to_synchronize);
         }
-
-        //2.add new params
-        $newParams = [];
-        for($i = count($tank_params); $i < count($user_params); $i++) {
-            $newParams[] = [
-                'devices_type' => Tank::class,
-                'devices_id' => $tank->id,
-                'settings_type' => Setting::class,
-                'settings_id' => array_get($user_params[$i], 'id', 1),
-                'value' => array_get($user_params[$i], 'value', 'default'),
-            ];
-        }
-        DeviseSettings::insert($newParams);
 
         return redirect(route('tanks.index'));
     }
@@ -129,10 +112,10 @@ class TankController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( $id )
     {
-        $tank =  Tank::findOrFail($id);
-        $tank->params()->delete();
+        $tank =  Tank::findOrFail( $id );
+        $tank->settings()->detach();
         $tank->delete();
         return redirect()->back();
     }
