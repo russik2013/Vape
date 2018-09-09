@@ -18,6 +18,10 @@ class Setting extends Model
     {
         return $this->morphedByMany(Tank::class, 'device');
     }
+    public function type()
+    {
+        return $this->belongsTo(SettingType::class);
+    }
 
     //набросок на будущее
 //    public function getDevicesAttribute($value)

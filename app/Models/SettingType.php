@@ -10,7 +10,8 @@ class SettingType extends Model
 
     protected $fillable = ['name'];
 
-    public function settings(){
+    public function settings()
+    {
         return $this->hasMany( Setting::class );
     }
 }
