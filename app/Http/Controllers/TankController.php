@@ -43,10 +43,11 @@ class TankController extends Controller
     {
         $tank->fill($request->all());
         $tank->save();
-
-        foreach ($request->params as $setting_data) {
-           $tank->settings()
-                ->attach( $setting_data['id'], ['value' => $setting_data['value']] );
+        if($request->params) {
+            foreach ($request->params as $setting_data) {
+                $tank->settings()
+                    ->attach($setting_data['id'], ['value' => $setting_data['value']]);
+            }
         }
 
         return redirect(route('tanks.index'));
