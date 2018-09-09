@@ -145,4 +145,18 @@ class TankController extends Controller
         $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
         return $settings_and_params;
     }
+
+    public function getSettingsAndTankParams(Request $request)
+    {
+        $params = DeviceSetting::where([
+            ['device_type', Tank::class],
+            ['device_id', $request->tank_id],
+        ])->get()->toJson();
+
+        $settings = $this->getAllSettings()->toJson();
+
+        $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
+
+        return $settings_and_params;
+    }
 }

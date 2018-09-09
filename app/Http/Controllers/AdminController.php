@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DeviceSetting;
 use App\Http\Requests\SettingRequest;
-use App\Http\Requests\AdditionalParamsRequest;
+
 use App\Mode;
 use App\Setting;
 use Illuminate\Http\Request;
@@ -48,19 +48,6 @@ class AdminController extends Controller
     {
         return Setting::all();
     }
-    public function getSettingsAndTankParams(Request $request)
-    {
-        $params = DeviceSetting::where([
-            ['device_type', Tank::class],
-            ['device_id', $request->tank_id],
-        ])->get()->toJson();
-
-        $settings = $this->getAllSettings()->toJson();
-
-        $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
-
-        return $settings_and_params;
-    }
     public function modes()
     {
         return view('modes.index', ['modes' => Mode::all()]);
@@ -103,24 +90,4 @@ class AdminController extends Controller
         return view('modes.single', ['mode' => Mode::find($id)]);
     }
 
-    /**
-     * Get additional view for adding settings to tanks
-     *
-     * @param \App\Http\Requests\AdditionalParamsRequest $request
-     * @return \Illuminate\Http\Response
-     * */
-    public function getAdditionalViewForTanks(AdditionalParamsRequest $request)
-    {
-        return view('tanks.forAdditionalParams', ['index' => $request->input('index')]);
-    }
-    /**
-     * Get additional view for adding tanks to users
-     *
-     * @param \App\Http\Requests\AdditionalParamsRequest $request
-     * @return \Illuminate\Http\Response
-     * */
-    public function getAdditionalViewForUsers( AdditionalParamsRequest $request)
-    {
-        return view('users.forAdditionalParams', ['index' => $request->input('index')]);
-    }
 }

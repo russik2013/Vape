@@ -17,14 +17,13 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function (){
 
     Route::resource("tanks","TankController");
-    Route::get('/settingForTank', 'AdminController@getAdditionalViewForTanks')->name("additionalSettingsForTanks");
-    Route::post('/settingsAndTanksParams', 'AdminController@getSettingsAndTankParams')->name('getSettingsAndTankParams');
+    Route::post('/settingsAndTanksParams', 'TankController@getSettingsAndTankParams')->name('getSettingsAndTankParams');
     Route::delete('detachSingleParam', 'TankController@detachSingleParam')->name('detachParamFromTank');
 
     Route::resource("liquids","LiquidController");
 
     Route::resource("users","UserController");
-    Route::get('/settingForUser', 'AdminController@getAdditionalViewForUsers')->name("additionalSettingsForUsers");
+    Route::get('/settingForUser', 'UserController@getAdditionalViewForUsers')->name("additionalSettingsForUsers");
 
     Route::get('tanks/delete/{id}', 'TankController@destroy')->name('tanks.delete');
     Route::get('liquids/delete/{id}', 'LiquidController@destroy')->name('liquids.delete');
