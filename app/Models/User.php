@@ -29,6 +29,6 @@ class User extends Authenticatable
     ];
 
     public function tanks() {
-        return $this->belongsToMany(Tank::class, 'users_to_tanks')->using(UsersTanks::class);
+        return $this->morphedByMany(Tank::class, 'device')->using(DeviceUser::class);
     }
 }

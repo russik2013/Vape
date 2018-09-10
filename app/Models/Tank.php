@@ -11,11 +11,10 @@ class Tank extends Model
     protected $fillable = ['name'];
 
     public function settings() {
-        return $this->morphToMany(Setting::class, 'device', 'device_setting');
+        return $this->morphToMany(Setting::class, 'device', 'device_setting' );
     }
 
     public function users() {
-      return $this->belongsToMany(User::class, 'users_to_tanks')->using(UsersTanks::class);
+      return $this->morphToMany(User::class, 'device', 'device_user' )->using( DeviceUser::class );
     }
-
 }

@@ -5,12 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UsersTanks extends Pivot
+class DeviceUser extends Pivot
 {
-    public $table = "users_to_tanks";
+    public $table = "device_user";
 
     protected $fillable = [
         'user_id',
-        'tank_id',
+        'device_type',
+        'device_id',
     ];
 }
