@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeviseSettingsTable extends Migration
+class CreateSettingTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateDeviseSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('devise_settings', function (Blueprint $table) {
+        Schema::create('setting_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->morphs('devices');
-            $table->morphs('settings');
+            $table->string('name');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -27,6 +27,6 @@ class CreateDeviseSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devise_settings');
+        Schema::dropIfExists('setting_types');
     }
 }

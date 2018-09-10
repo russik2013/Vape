@@ -12,8 +12,17 @@ class Setting extends Model
 
     public function devices()
     {
-        return $this->morphMany(DeviseSettings::class, 'settings');
+        return $this->morphMany(DeviceSetting::class, 'setting');
     }
+    public function tanks()
+    {
+        return $this->morphedByMany(Tank::class, 'device');
+    }
+    public function type()
+    {
+        return $this->belongsTo(SettingType::class);
+    }
+
     //набросок на будущее
 //    public function getDevicesAttribute($value)
 //    {

@@ -4,13 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Liquid extends Model
+class Mode extends Model
 {
-    public $table = 'liquids';
+    public $timestamps = false;
 
     protected $fillable = ['name'];
 
     public function params() {
-        return $this->morphMany(DeviseSettings::class, 'devices');
+        return $this->morphMany(DeviceSetting::class, 'devices');
     }
+
+
 }

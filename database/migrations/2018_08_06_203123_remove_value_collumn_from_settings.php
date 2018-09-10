@@ -1,9 +1,7 @@
 <?php
-
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-
 class RemoveValueCollumnFromSettings extends Migration
 {
     /**
@@ -20,7 +18,6 @@ class RemoveValueCollumnFromSettings extends Migration
             $table->string('value');
         });
     }
-
     /**
      * Reverse the migrations.
      *

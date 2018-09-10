@@ -10,7 +10,7 @@
                 "<br name='params["+j+"][br]'/>" +
                 "<select name = 'params["+j+"][id]'>";
             for( var k = 0; k < settings.length; k++ ) {
-                if(settingsAndParams.params[i].settings_id === settingsAndParams.settings[k].id) {
+                if(settingsAndParams.params[i].setting_id === settings[k].id) {
                     selector += "<option selected = '1' value = '"+settings[k].id+"'>"+settings[k].name+"</option>";
                 }
                 else {

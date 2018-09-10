@@ -7,12 +7,12 @@
             <tr><td>created at = {{$tank->created_at}}</td></tr>
             <tr><td>updated at = {{$tank->updated_at}}</td></tr>
         </table>
-        Params:
+        Settings:
         <table>
-            @foreach($tank->params as $setting)
+            @foreach($params as $param)
                 <tr>
-                    <td>name = {{$setting->settings->name}}</td>
-                    <td>value = {{$setting->value}}</td>
+                    <td>name = {{$tank->settings->find($param->setting_id)->name}}</td>
+                    <td>value = {{$param->value}}</td>
                 </tr>
                 @endforeach
         </table>
