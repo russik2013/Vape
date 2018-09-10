@@ -25,22 +25,7 @@
 
         for( i = 0;i < j; i++ ) {
             $("[name$='[" + i + "][delBut]']").click({iter:i}, function (event) {
-                var selectedOption = $("select[name='params[" + event.data.iter + "][id]']").val();
-                var selectedValue = $("input[name='params[" + event.data.iter + "][value]']").val();
-                $.ajax({
-                    url: "{{route('detachParamFromTank')}}",
-                    type: "DELETE",
-                    async: false,
-                    data: {
-                        '_token': "{{csrf_token()}}",
-                        'param': {'id': selectedOption, 'value': selectedValue},
-                        'tank_id': "{{$tank->id}}"
-                    },
-                    success: function (result) {
-                        $("[name^=params]").remove();
-                        loadSettings(result);
-                    }
-                });
+                $("[name^=params\\[" + event.data.iter + "\\]]").remove();
             } );
         }
     }

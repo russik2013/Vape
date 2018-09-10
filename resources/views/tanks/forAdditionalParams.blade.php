@@ -17,8 +17,12 @@
                 selector += "</select><input name = 'params["+j+"][value]'>";
                 selector += "<input type='button' name='params["+j+"][delBut]' value='Remove'/>";
                 $('form').append(selector);
+
+                $("[name$='[" + j + "][delBut]']").click({iter:j}, function (event) {
+                    $("[name^=params\\[" + event.data.iter + "\\]]").remove();
+                } );
+
                 j++;
             }});
-
     });
 </script>

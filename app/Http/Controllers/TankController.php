@@ -103,6 +103,9 @@ class TankController extends Controller
             }
             $tank->settings()->sync($params_to_synchronize);
         }
+        else {
+            $tank->settings()->sync([]);
+        }
 
         return redirect(route('tanks.index'));
     }
