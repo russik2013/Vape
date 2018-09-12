@@ -17,40 +17,28 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function (){
 
     Route::resource("tanks","TankController");
-    Route::get('/settingForTank', 'AdminController@getAdditionalViewForTanks')->name("additionalSettingsForTanks");
-    Route::post('/settingsAndTanksParams', 'AdminController@getSettingsAndTankParams')->name('getSettingsAndTankParams');
-    Route::delete('/detachSingleParam', 'AdminController@detachSingleParam')->name('detachParamFromTank');
+    Route::post('/settingsAndTanksParams', 'TankController@getSettingsAndTankParams')->name('getSettingsAndTankParams');
+    Route::delete('detachSingleParam', 'TankController@detachSingleParam')->name('detachParamFromTank');
 
     Route::resource("liquids","LiquidController");
 
     Route::resource("users","UserController");
-    Route::get('/settingForUser', 'AdminController@getAdditionalViewForUsers')->name("additionalSettingsForUsers");
+    Route::get('/settingForUser', 'UserController@getAdditionalViewForUsers')->name("additionalSettingsForUsers");
 
     Route::get('tanks/delete/{id}', 'TankController@destroy')->name('tanks.delete');
     Route::get('liquids/delete/{id}', 'LiquidController@destroy')->name('liquids.delete');
     Route::get('users/delete/{id}', 'UserController@destroy')->name('users.delete');
+    Route::get('modes/delete/{id}', 'ModeController@destroy')->name('modes.delete');
+    Route::get('settings/delete/{id}', 'SettingController@destroy')->name('settings.delete');
 
-    Route::group(['prefix' => 'modes'], function () {
+    Route::resource("modes", "ModeController")->except(['update', 'edit']);
 
-        Route::get('/', 'AdminController@modes')->name('modes.index');
-        Route::get('modes/{id?}', 'AdminController@modesCreate')->name('modes.create');
-        Route::post('store/{id?}', 'AdminController@modesStore')->name('modes.store');
-        Route::get('show', 'AdminController@modeShow')->name('modes.show');
-        Route::get('delete/{id}', 'AdminController@modeDelete')->name('modes.delete');
+    Route::resource("settings", "SettingController")->except(['update', 'edit']);
 
-    });
-
-    Route::group(['prefix' => 'settings'], function (){
-        Route::get('/', 'AdminController@settings')->name('settings.all');
-        Route::get('delete/{id}', 'AdminController@settingsDelete')->name('settings.delete');
-        Route::get('setting/{id?}', 'AdminController@settingsCreate')->name('settings.create');
-        Route::get('show/{id}', 'AdminController@settingsShow')->name('settings.show');
-        Route::post('create/{id?}', 'AdminController@store')->name('settings.store');
+    Route::group(['prefix' => 'settings'], function ()
+    {
         Route::post('getAllSettings', 'AdminController@getAllSettings')->name('settings.all.get');
     });
-
-
-
 });
 
 

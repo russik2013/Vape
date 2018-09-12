@@ -120,4 +120,43 @@ class TankController extends Controller
         $tank->delete();
         return redirect()->back();
     }
+    /**
+     * Detach single param from tank.
+     *
+     * @param  Request $request
+     * @return bool
+     */
+    public function detachSingleParam(Request $request)
+    {
+        DeviceSetting::where([
+            ["device_type", "=", Tank::class],
+            ["device_id", "=", $request->input('tank_id')],
+            ["setting_id", "=", $request->input('param')['id']],
+            ["value", "=", $request->input('param')['value']],
+        ])->delete();
+
+        $params = DeviceSetting::where([
+            ['device_type', Tank::class],
+            ['device_id', $request->input('tank_id')],
+        ])->get()->toJson();
+
+        $settings = Setting::all()->toJson();
+
+        $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
+        return $settings_and_params;
+    }
+
+    public function getSettingsAndTankParams(Request $request)
+    {
+        $params = DeviceSetting::where([
+            ['device_type', Tank::class],
+            ['device_id', $request->tank_id],
+        ])->get()->toJson();
+
+        $settings = $this->getAllSettings()->toJson();
+
+        $settings_and_params = "{\"settings\":".$settings.",\"params\":".$params."}";
+
+        return $settings_and_params;
+    }
 }

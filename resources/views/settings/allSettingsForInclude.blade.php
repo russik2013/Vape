@@ -23,7 +23,7 @@
                         }
                         selector+= "</select>";
                          $('form').append( selector + " <input name='Settings["+settingsNumber+"][settingValue]'>" );
-                        
+
                         // console.log(settingsNumber);
                         settingsNumber++;
                     }

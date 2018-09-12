@@ -19,6 +19,5 @@
                 $('form').append(selector);
                 j++;
             }});
-
     });
 </script>

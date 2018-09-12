@@ -13,9 +13,9 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer(
-            'admin.settings.allSettingsForInclude', 'App\Http\Controllers\AdminController@settingViewComposer'
-        );
+//        view()->composer(
+//            'admin.settings.allSettingsForInclude', 'App\Http\Controllers\AdminController@settingViewComposer'
+//        );
     }
 
     /**

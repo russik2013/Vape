@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Tank;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\AdditionalParamsRequest;
 
 class UserController extends Controller
 {
@@ -112,5 +113,16 @@ class UserController extends Controller
         User::findOrFail($id)->delete();
 
         return redirect()->back();
+    }
+
+    /**
+     * Get additional view for adding tanks to users
+     *
+     * @param \App\Http\Requests\AdditionalParamsRequest $request
+     * @return \Illuminate\Http\Response
+     * */
+    public function getAdditionalViewForUsers( AdditionalParamsRequest $request)
+    {
+        return view('users.forAdditionalParams', ['index' => $request->input('index')]);
     }
 }
