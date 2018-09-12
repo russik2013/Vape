@@ -1,4 +1,4 @@
-@extends("tanks.base")
+@extends("settings.base")
 @section("content")
     <div class="container">
         <table>

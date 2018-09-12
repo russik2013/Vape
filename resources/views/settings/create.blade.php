@@ -1,4 +1,4 @@
-@extends("admin.admin")
+@extends("settings.base")
 @section("content")
     <div class="container">
         <form action="{{route('settings.store', ['id' => $setting->id])}}" method="POST">

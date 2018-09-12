@@ -29,20 +29,16 @@ Route::group(['prefix' => 'admin'], function (){
     Route::get('liquids/delete/{id}', 'LiquidController@destroy')->name('liquids.delete');
     Route::get('users/delete/{id}', 'UserController@destroy')->name('users.delete');
     Route::get('modes/delete/{id}', 'ModeController@destroy')->name('modes.delete');
+    Route::get('settings/delete/{id}', 'SettingController@destroy')->name('settings.delete');
 
     Route::resource("modes", "ModeController")->except(['update', 'edit']);
-    
-    Route::group(['prefix' => 'settings'], function (){
-        Route::get('/', 'AdminController@settings')->name('settings.all');
-        Route::get('delete/{id}', 'AdminController@settingsDelete')->name('settings.delete');
-        Route::get('setting/{id?}', 'AdminController@settingsCreate')->name('settings.create');
-        Route::get('show/{id}', 'AdminController@settingsShow')->name('settings.show');
-        Route::post('create/{id?}', 'AdminController@store')->name('settings.store');
+
+    Route::resource("settings", "SettingController")->except(['update', 'edit']);
+
+    Route::group(['prefix' => 'settings'], function ()
+    {
         Route::post('getAllSettings', 'AdminController@getAllSettings')->name('settings.all.get');
     });
-
-
-
 });
 
 

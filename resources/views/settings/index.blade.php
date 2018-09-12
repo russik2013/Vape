@@ -1,4 +1,4 @@
-@extends("admin.admin")
+@extends("settings.base")
 @section("content")
     @foreach($settings as $setting)
         <tr>
