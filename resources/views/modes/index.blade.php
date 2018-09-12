@@ -10,9 +10,9 @@
                                 <a href="{{route('modes.show', ['id' => $mode->id])}}">{{ $mode->name }}</a>
                             </div>
                         </td>
-                        <!-- Tank Delete Button -->
+                        <!-- Mode Delete Button -->
                         <td>
-                            <a href="{{route('modes.destroy', ['id' => $mode->id])}}">
+                            <a href="{{route('modes.delete', ['id' => $mode->id])}}">
                                 <button >
                                     <i class="fa fa-btn fa-trash">Delete</i>
                                 </button>
