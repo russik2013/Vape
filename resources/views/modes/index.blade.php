@@ -12,14 +12,14 @@
                         </td>
                         <!-- Tank Delete Button -->
                         <td>
-                            <a href="{{route('modes.delete', ['id' => $mode->id])}}">
+                            <a href="{{route('modes.destroy', ['id' => $mode->id])}}">
                                 <button >
                                     <i class="fa fa-btn fa-trash">Delete</i>
                                 </button>
                             </a>
                         </td>
                         <td>
-                            <a href="{{route("modes.create",['id' => $mode->id])}}">
+                            <a href="{{route("modes.create",[ 'id' => $mode->id ])}}">
                                 <button >
                                     <i class="fa fa-btn fa-trash">Update</i>
                                 </button>

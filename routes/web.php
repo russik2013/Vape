@@ -29,15 +29,15 @@ Route::group(['prefix' => 'admin'], function (){
     Route::get('liquids/delete/{id}', 'LiquidController@destroy')->name('liquids.delete');
     Route::get('users/delete/{id}', 'UserController@destroy')->name('users.delete');
 
-    Route::group(['prefix' => 'modes'], function () {
+    Route::resource("modes", "ModeController")->except(['update', 'edit']);
 
-        Route::get('/', 'AdminController@modes')->name('modes.index');
-        Route::get('modes/{id?}', 'AdminController@modesCreate')->name('modes.create');
-        Route::post('store/{id?}', 'AdminController@modesStore')->name('modes.store');
-        Route::get('show', 'AdminController@modeShow')->name('modes.show');
-        Route::get('delete/{id}', 'AdminController@modeDelete')->name('modes.delete');
-
-    });
+//    Route::group(['prefix' => 'modes'], function () {
+//        Route::get('/', 'AdminController@modes')->name('modes.index');
+//        Route::get('modes/{id?}', 'AdminController@modesCreate')->name('modes.create');
+//        Route::post('store/{id?}', 'AdminController@modesStore')->name('modes.store');
+//        Route::get('show', 'AdminController@modeShow')->name('modes.show');
+//        Route::get('delete/{id}', 'AdminController@modeDelete')->name('modes.delete');
+//    });
 
     Route::group(['prefix' => 'settings'], function (){
         Route::get('/', 'AdminController@settings')->name('settings.all');

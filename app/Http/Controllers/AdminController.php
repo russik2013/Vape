@@ -48,46 +48,4 @@ class AdminController extends Controller
     {
         return Setting::all();
     }
-    public function modes()
-    {
-        return view('modes.index', ['modes' => Mode::all()]);
-    }
-
-    public function modesCreate($id = null)
-    {
-        return view('modes.create', ['mode' => Mode::findOrNew($id)]);
-    }
-
-    public function modesStore( Request $request, $id = null)
-    {
-        $mode = Mode::findOrNew($id);
-        $mode->fill($request->all());
-        $mode->save();
-        $settingsMass = [];
-        if($request->Settings) {
-            foreach ($request->Settings as $setting) {
-                $settingsMass[] = [
-                    'devices_type' => Mode::class,
-                    'devices_id' => $mode->id,
-                    'settings_type' => Setting::class,
-                    'settings_id' => array_get($setting, 'settingID', 1),
-                    'value' => array_get($setting, 'settingValue', 'default')
-                ];
-            }
-        }
-        DeviceSetting::insert($settingsMass);
-        return redirect(route('modes.index'));
-    }
-
-    public function modeDelete($id)
-    {
-        (Mode::findOrNew($id))->delete();
-        return redirect(route('modes.index'));
-    }
-
-    public function modeShow($id)
-    {
-        return view('modes.single', ['mode' => Mode::find($id)]);
-    }
-
 }
